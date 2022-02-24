@@ -3,20 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using UnityEngine.UI;
 
 public class TextureCombiner : MonoBehaviour
 {
-    public Texture2D sourceTex1;
-    public Texture2D sourceTex2;
-    public float warpFactor = 1.0f;
+    public RawImage image1;
+    public RawImage image2;
+
+    public Material targetMat;
     
+    
+
     Texture2D destTex1;
     Color[] destPix1;
     
     Texture2D destTex2;
     Color[] destPix2;
-    void Start()
+
+    public void UpdateTexture(float value)
     {
+        Texture2D sourceTex1 = (Texture2D)image1.mainTexture;
+        Texture2D sourceTex2 = (Texture2D)image2.mainTexture;
+        
         destTex1 = new Texture2D(sourceTex1.width, sourceTex1.height);
         destPix1 = new Color[destTex1.width * destTex1.height];
         
@@ -35,10 +43,8 @@ public class TextureCombiner : MonoBehaviour
                     continue;
                 }
                 
-                Color pixelColor = Color.Lerp(sourceTex1.GetPixelBilinear(xFrac, yFrac), sourceTex2.GetPixelBilinear(xFrac, yFrac), 0.5f);
-                //Color pixelColor = Color.blue;
+                Color pixelColor = Color.Lerp(sourceTex1.GetPixelBilinear(xFrac, yFrac), sourceTex2.GetPixelBilinear(xFrac, yFrac), value);
 
-                // Get the non-integer pixel positions using GetPixelBilinear.
                 destPix1[y * destTex1.width + x] = pixelColor;
             }
         }
@@ -46,15 +52,14 @@ public class TextureCombiner : MonoBehaviour
         destTex1.SetPixels(destPix1);
         destTex1.Apply();
         
-        byte[] bytes = destTex1.EncodeToPNG();
-        
-        File.WriteAllBytes(Application.dataPath + "/../SavedScreen.png", bytes);
-        Debug.Log("saved something");
-    }
+        Debug.Log(value);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        targetMat.mainTexture = destTex1;
+
+        //
+        // byte[] bytes = destTex1.EncodeToPNG();
+        //
+        // File.WriteAllBytes(Application.dataPath + "/../SavedScreen.png", bytes);
+        // Debug.Log("saved something");
     }
 }
