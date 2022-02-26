@@ -55,7 +55,6 @@ public class TextureCombiner : MonoBehaviour
         Debug.Log(value);
 
         targetMat.mainTexture = destTex1;
-
         //
         // byte[] bytes = destTex1.EncodeToPNG();
         //
