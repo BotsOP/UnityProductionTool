@@ -10,21 +10,18 @@ public class InputCommand : ICommand
     private string originalValue;
     private string newValue;
 
-    public InputCommand(TMP_InputField input, string newValue)
+    public InputCommand(TMP_InputField input, string newValue, string originalValue)
     {
         this.input = input;
-        originalValue = input.text;
+        this.originalValue = originalValue;
         this.newValue = newValue;
-        Debug.Log( originalValue + "   " + newValue);
     }
     public void Execute()
     {
-        Debug.Log( originalValue + "   " + newValue);
         input.text = newValue;
     }
     public void Undo()
     {
-        Debug.Log( originalValue + "   " + newValue);
         input.text = originalValue;
     }
 }
