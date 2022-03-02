@@ -11,14 +11,54 @@ public class NewMaterial : MonoBehaviour
     public float metallic;
     public float smoothness;
 
-    public Material material;
+    public GameObject sphere;
+    
+    public GameObject newMatWindow;
+
+    private Material material;
+    
+    private void OnEnable()
+    {
+        EventSystem<RawImage, Texture, Texture>.Subscribe(EventType.IMAGE_CHANGED, ImageChanged);
+        EventSystem.Subscribe(EventType.OPEN_MAT_WINDOW, OpenMatWindow);
+
+        material = sphere.GetComponent<MeshRenderer>().material;
+    }
+
+    private void OnDisable()
+    {
+        EventSystem<RawImage, Texture, Texture>.Unsubscribe(EventType.IMAGE_CHANGED, ImageChanged);
+        EventSystem.Unsubscribe(EventType.OPEN_MAT_WINDOW, OpenMatWindow);
+    }
     
     void Update()
+    {
+        material.SetFloat("Mettalic_", metallic);
+        material.SetFloat("Smoothness_", smoothness);
+    }
+    
+    private void ImageChanged(RawImage image, Texture newTexture, Texture originalTexture)
     {
         material.SetTexture("Albedo_", albedo.texture);
         material.SetTexture("Normal_", normal.texture);
         material.SetTexture("AmbientOcclusion_", ambientOcclusion.texture);
-        material.SetFloat("Mettalic_", metallic);
-        material.SetFloat("Smoothness_", smoothness);
+    }
+
+    private void OpenMatWindow()
+    {
+        //reset newMat window
+        newMatWindow.SetActive(true);
+    }
+
+    public void CloseMatWindow()
+    {
+        //clear something idk
+        newMatWindow.SetActive(false);
+    }
+
+    public void FinishMaterial()
+    {
+        EventSystem<Material>.RaiseEvent(EventType.FINISHED_MATERIAL, material);
+        CloseMatWindow();
     }
 }

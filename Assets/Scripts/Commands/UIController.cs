@@ -29,7 +29,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void ImageChanged(RawImage image, Texture newTexture, Texture originalTexture)
+    private void ImageChanged(RawImage image, Texture newTexture, Texture originalTexture)
     {
         commandStack.ExecuteCommand(new ImageCommand(image, newTexture, originalTexture));
     }

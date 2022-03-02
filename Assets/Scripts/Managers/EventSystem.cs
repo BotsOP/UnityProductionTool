@@ -5,12 +5,8 @@ using UnityEngine;
 public enum EventType
 {
     IMAGE_CHANGED,
-    UPDATE,
-    FIXED_UPDATE,
-    DISTRACTION,
-    PLAYER_ATTACKED,
-    FLASHLIGHT,
-    PLAYER_SNEAKING
+    FINISHED_MATERIAL,
+    OPEN_MAT_WINDOW
 }
 
 public static class EventSystem
