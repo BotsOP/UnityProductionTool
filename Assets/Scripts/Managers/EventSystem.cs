@@ -6,7 +6,8 @@ public enum EventType
 {
     IMAGE_CHANGED,
     FINISHED_MATERIAL,
-    OPEN_MAT_WINDOW
+    OPEN_MAT_WINDOW,
+    UPDATE_RENDERER
 }
 
 public static class EventSystem

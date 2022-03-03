@@ -11,7 +11,7 @@ public class NewMaterial : MonoBehaviour
     public float metallic;
     public float smoothness;
 
-    public GameObject sphere;
+    public MeshRenderer sphere;
     
     public GameObject newMatWindow;
 
@@ -22,7 +22,7 @@ public class NewMaterial : MonoBehaviour
         EventSystem<RawImage, Texture, Texture>.Subscribe(EventType.IMAGE_CHANGED, ImageChanged);
         EventSystem.Subscribe(EventType.OPEN_MAT_WINDOW, OpenMatWindow);
 
-        material = sphere.GetComponent<MeshRenderer>().material;
+        
     }
 
     private void OnDisable()
@@ -33,8 +33,8 @@ public class NewMaterial : MonoBehaviour
     
     void Update()
     {
-        material.SetFloat("Mettalic_", metallic);
-        material.SetFloat("Smoothness_", smoothness);
+        // material.SetFloat("Mettalic_", metallic);
+        // material.SetFloat("Smoothness_", smoothness);
     }
     
     private void ImageChanged(RawImage image, Texture newTexture, Texture originalTexture)
@@ -46,13 +46,16 @@ public class NewMaterial : MonoBehaviour
 
     private void OpenMatWindow()
     {
-        //reset newMat window
+        material = new Material(Shader.Find("Shader Graphs/BasicShader"));
+        sphere.material = material;
         newMatWindow.SetActive(true);
     }
 
     public void CloseMatWindow()
     {
-        //clear something idk
+        albedo.texture = null;
+        normal.texture = null;
+        ambientOcclusion.texture = null;
         newMatWindow.SetActive(false);
     }
 
