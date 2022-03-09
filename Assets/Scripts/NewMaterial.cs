@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,8 +22,6 @@ public class NewMaterial : MonoBehaviour
     {
         EventSystem<RawImage, Texture, Texture>.Subscribe(EventType.IMAGE_CHANGED, ImageChanged);
         EventSystem.Subscribe(EventType.OPEN_MAT_WINDOW, OpenMatWindow);
-
-        
     }
 
     private void OnDisable()
@@ -30,7 +29,7 @@ public class NewMaterial : MonoBehaviour
         EventSystem<RawImage, Texture, Texture>.Unsubscribe(EventType.IMAGE_CHANGED, ImageChanged);
         EventSystem.Unsubscribe(EventType.OPEN_MAT_WINDOW, OpenMatWindow);
     }
-    
+
     void Update()
     {
         // material.SetFloat("Mettalic_", metallic);
