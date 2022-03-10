@@ -17,6 +17,7 @@ public class NewMaterial : MonoBehaviour
     public GameObject newMatWindow;
 
     private Material material;
+    private MaterialSkeleton materialSkeleton;
     
     private void OnEnable()
     {
@@ -41,6 +42,8 @@ public class NewMaterial : MonoBehaviour
         material.SetTexture("Albedo_", albedo.texture);
         material.SetTexture("Normal_", normal.texture);
         material.SetTexture("AmbientOcclusion_", ambientOcclusion.texture);
+
+        
     }
 
     private void OpenMatWindow()
@@ -55,12 +58,17 @@ public class NewMaterial : MonoBehaviour
         albedo.texture = null;
         normal.texture = null;
         ambientOcclusion.texture = null;
+        //materialSkeleton = new MaterialSkeleton();
         newMatWindow.SetActive(false);
     }
 
     public void FinishMaterial()
     {
-        EventSystem<Material>.RaiseEvent(EventType.FINISHED_MATERIAL, material);
+        materialSkeleton.baseMap = albedo.texture;
+        materialSkeleton.normalMap = normal.texture;
+        materialSkeleton.aoMap = ambientOcclusion.texture;
+        
+        EventSystem<MaterialSkeleton>.RaiseEvent(EventType.FINISHED_MATERIAL, materialSkeleton);
         CloseMatWindow();
     }
 }

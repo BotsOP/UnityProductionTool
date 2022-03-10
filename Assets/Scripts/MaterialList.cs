@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,13 +12,13 @@ public class MaterialList : MonoBehaviour
     private List<MaterialItem> materials = new List<MaterialItem>();
     private void OnEnable()
     {
-        EventSystem<Material>.Subscribe(EventType.FINISHED_MATERIAL, AddMaterial);
+        EventSystem<MaterialSkeleton>.Subscribe(EventType.FINISHED_MATERIAL, AddMaterial);
         EventSystem.Subscribe(EventType.UPDATE_RENDERER, UpdateRender);
     }
 
     private void OnDisable()
     {
-        EventSystem<Material>.Unsubscribe(EventType.FINISHED_MATERIAL, AddMaterial);
+        EventSystem<MaterialSkeleton>.Unsubscribe(EventType.FINISHED_MATERIAL, AddMaterial);
         EventSystem.Unsubscribe(EventType.UPDATE_RENDERER, UpdateRender);
     }
     
@@ -26,12 +27,20 @@ public class MaterialList : MonoBehaviour
         EventSystem.RaiseEvent(EventType.OPEN_MAT_WINDOW);
     }
 
-    private void AddMaterial(Material newMaterial)
+    private void Update()
+    {
+        // foreach (var mat in materials)
+        // {
+        //     mat.UpdateMaterial(new MaterialSkeleton());
+        // };
+    }
+
+    private void AddMaterial(MaterialSkeleton newMaterial)
     {
         GameObject materialUI = Instantiate(materialItemUI, panel);
         materialUI.transform.SetSiblingIndex(0);
         MaterialItem materialItem = materialUI.GetComponent<MaterialItem>();
-        materialItem.material = newMaterial;
+        materialItem.materialSkeleton = newMaterial;
         materials.Insert(0, materialItem);
         Debug.Log(materialItem.MaterialIndex);
         UpdateRender();
@@ -39,41 +48,35 @@ public class MaterialList : MonoBehaviour
 
     private void UpdateRender()
     {
-
-        if (materials.Count > 1)
+        for (int i = 0; i < materials.Count; i++)
         {
-            Debug.Log("Doing something");
-            //Get second last mat
-            Material secondLastMaterial = materials[materials.Count - 2].material;
-            Material lastMaterial = materials[materials.Count - 1].material;
-            Debug.Log(materials[materials.Count - 2].MaterialIndex);
-            Debug.Log(materials[materials.Count - 1].MaterialIndex);
-        
-            Material newMaterial = new Material(Shader.Find("Shader Graphs/BasicCombineShader"));
-            newMaterial.SetTexture("Albedo_", secondLastMaterial.GetTexture("Albedo_"));
-            newMaterial.SetTexture("Normal_", secondLastMaterial.GetTexture("Normal_"));
-            newMaterial.SetTexture("AmbientOcclusion_", secondLastMaterial.GetTexture("AmbientOcclusion_"));
-        
-            newMaterial.SetTexture("Albedo2_", lastMaterial.GetTexture("Albedo_"));
-            newMaterial.SetTexture("Normal2_", lastMaterial.GetTexture("Normal_"));
-            newMaterial.SetTexture("AmbientOcclusion2_", lastMaterial.GetTexture("AmbientOcclusion_"));
-
-            materials[materials.Count - 2].material = newMaterial;
+            Move(materials, i, materials[i].MaterialIndex);
         }
-        
+        for (int i = 0; i < materials.Count; i++)
+        {
+            //Debug.Log(i + "    " + materials[i].MaterialIndex);
+        }
+
+        for (int i = materials.Count - 2; i >= 0; i--)
+        {
+            Debug.Log("Test2  " + i);
+            materials[i].UpdateMaterial(materials[i + 1].material);
+        }
+        Debug.Log("Test3");
+
+        if (materials.Count == 1)
+        {
+            materials[0].UpdateMaterial(new Material(Shader.Find("Universal Render Pipeline/Lit")));
+        }
         //get top mat
-         Material topMaterial = null;
-        
-         foreach (var materialItem in materials)
-         {
-             if (materialItem.MaterialIndex == 0)
-             {
-                 Debug.Log("found material   " + materialItem.MaterialIndex);
-                 topMaterial = materialItem.material;
-             }
-         }
-        
-         planeTarget.material = topMaterial;
+        planeTarget.material = materials[0].material;
+    }
+    
+    public void Move<T>(List<T> list, int oldIndex, int newIndex)
+    {
+        T item = list[oldIndex];
+        list.RemoveAt(oldIndex);
+        list.Insert(newIndex, item);
     }
     
 }

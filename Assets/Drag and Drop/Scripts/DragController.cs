@@ -47,7 +47,8 @@ public class DragController : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        EventSystem.RaiseEvent(EventType.UPDATE_RENDERER);
         currentTransform.position = currentPossition;
+        Debug.Log("updated renderer");
+        EventSystem.RaiseEvent(EventType.UPDATE_RENDERER);
     }
 }
