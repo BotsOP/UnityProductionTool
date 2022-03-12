@@ -8,8 +8,8 @@ public class MaterialItem : MonoBehaviour
 {
     public MaterialSkeleton materialSkeleton;
     public Material material;
-    public Texture texture;
     public Shader combineShader;
+    private Material materialUnderneath;
     private RenderTexture[] rTextures = new RenderTexture[3];
     private Material combineMat;
     private RawImage image;
@@ -22,6 +22,8 @@ public class MaterialItem : MonoBehaviour
 
     private void OnEnable()
     {
+        EventSystem<MaterialSkeleton, Transform>.Subscribe(EventType.UPDATED_MATERIAL, UpdateMaterialSkeleton);
+
         material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
         combineMat = new Material(combineShader);
         image = GetComponent<RawImage>();
@@ -33,8 +35,15 @@ public class MaterialItem : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        EventSystem<MaterialSkeleton, Transform>.Unsubscribe(EventType.UPDATED_MATERIAL, UpdateMaterialSkeleton);
+    }
+
     public void UpdateMaterial(Material materialUnderneath)
     {
+        this.materialUnderneath = materialUnderneath;
+        
         combineMat.SetTexture(MainTex, materialUnderneath.GetTexture(BaseMap));
         combineMat.SetTexture(OnTopTex, materialSkeleton.baseMap);
         Graphics.Blit(materialUnderneath.GetTexture(BaseMap), rTextures[0], combineMat);
@@ -50,6 +59,31 @@ public class MaterialItem : MonoBehaviour
         combineMat.SetTexture(OnTopTex, materialSkeleton.aoMap);
         Graphics.Blit(materialUnderneath.GetTexture(OcclusionMap), rTextures[2], combineMat);
         material.SetTexture(OcclusionMap, rTextures[2]);
+    }
+
+    private void UpdateMaterialSkeleton(MaterialSkeleton newMaterialSkeleton, Transform keyTransform)
+    {
+        if (keyTransform == null)
+        {
+            Debug.Log("transform is null");
+            return;
+        }
+        if (transform == keyTransform)
+        {
+            Debug.Log("update material");
+            materialSkeleton = newMaterialSkeleton;
+            UpdateMaterial(materialUnderneath);
+        }
+        else
+        {
+            Debug.Log("not correct transform  " + transform.GetSiblingIndex() + "    " + keyTransform.GetSiblingIndex());
+        }
+    }
+
+    public void SelectedMaterial()
+    {
+        Debug.Log("click");
+        EventSystem<MaterialSkeleton, Transform>.RaiseEvent(EventType.SELECTED_MATERIAL, materialSkeleton, transform);
     }
 }
 

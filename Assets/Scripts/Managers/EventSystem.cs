@@ -7,7 +7,9 @@ public enum EventType
     IMAGE_CHANGED,
     FINISHED_MATERIAL,
     OPEN_MAT_WINDOW,
-    UPDATE_RENDERER
+    UPDATE_RENDERER,
+    SELECTED_MATERIAL,
+    UPDATED_MATERIAL
 }
 
 public static class EventSystem

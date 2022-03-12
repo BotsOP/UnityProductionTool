@@ -43,7 +43,6 @@ public class NewMaterial : MonoBehaviour
         material.SetTexture("Normal_", normal.texture);
         material.SetTexture("AmbientOcclusion_", ambientOcclusion.texture);
 
-        
     }
 
     private void OpenMatWindow()
