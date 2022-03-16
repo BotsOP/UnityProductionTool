@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class MaterialList : MonoBehaviour
 {
-    public MeshRenderer planeTarget;
-    public GameObject materialItemUI;
-    public Transform panel;
+    [SerializeField] private MeshRenderer planeTarget;
+    [SerializeField] private GameObject materialItemUI;
+    [SerializeField] private Transform panel;
     private List<MaterialItem> materials = new List<MaterialItem>();
     private void OnEnable()
     {
@@ -59,15 +59,12 @@ public class MaterialList : MonoBehaviour
 
         for (int i = materials.Count - 2; i >= 0; i--)
         {
-            Debug.Log("Test2  " + i);
+            Debug.Log(i);
             materials[i].UpdateMaterial(materials[i + 1].material);
         }
-        Debug.Log("Test3");
-
-        if (materials.Count == 1)
-        {
-            materials[0].UpdateMaterial(new Material(Shader.Find("Universal Render Pipeline/Lit")));
-        }
+        
+        materials[materials.Count - 1].UpdateMaterial(new Material(Shader.Find("Universal Render Pipeline/Lit")));
+        
         //get top mat
         planeTarget.material = materials[0].material;
     }

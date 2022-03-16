@@ -423,7 +423,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 05bc40057ee336b40a353ab5980bbb7f, type: 2}
-  combineShader: {fileID: 4800000, guid: 57d8c662a569005479f42619fe7bdbfb, type: 3}
+  combineShaderAlpha: {fileID: 4800000, guid: 57d8c662a569005479f42619fe7bdbfb, type: 3}
+  combineShaderRed: {fileID: 4800000, guid: f7b06e193f89e6c46bd2090b5a3dfa1f, type: 3}
 --- !u!114 &1753038733952869749
 MonoBehaviour:
   m_ObjectHideFlags: 0

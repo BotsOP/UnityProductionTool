@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public class NewMaterial : MonoBehaviour
 {
-    public RawImage albedo;
-    public RawImage normal;
-    public RawImage ambientOcclusion;
-    public float metallic;
-    public float smoothness;
+    [SerializeField] private RawImage albedo;
+    [SerializeField] private RawImage normal;
+    [SerializeField] private RawImage ambientOcclusion;
+    [SerializeField] private float metallic;
+    [SerializeField] private float smoothness;
 
     public MeshRenderer sphere;
     

@@ -6,8 +6,14 @@ using UnityEngine.UI;
 
 public class EditMaterial : MonoBehaviour
 {
-    public RawImage albedoImage;
+    [SerializeField] private RawImage albedoImage;
+    [SerializeField] private RawImage maskImage;
+    [SerializeField] private GameObject matSettings;
+    [SerializeField] private GameObject maskSettings;
+    [SerializeField] private Color buttonPressed;
+    [SerializeField] private Color buttonNotPressed;
     private Transform materialTransformKey;
+    private Image lastButtonPressed;
     private MaterialSkeleton materialSkeleton;
 
     private void OnEnable()
@@ -25,6 +31,10 @@ public class EditMaterial : MonoBehaviour
     private void SelectedNewMaterial(MaterialSkeleton newMaterialSkeleton, Transform newMaterialTransformKey)
     {
         Debug.Log("got selected");
+        if (newMaterialTransformKey == null)
+        {
+            Debug.Log("received empty transofrm");
+        }
         materialTransformKey = newMaterialTransformKey;
         materialSkeleton = newMaterialSkeleton;
         
@@ -33,13 +43,24 @@ public class EditMaterial : MonoBehaviour
 
     public void OnImageChanged(RawImage image, Texture texture1, Texture texture2)
     {
-        if (image == albedoImage)
+        if (materialSkeleton.baseMap != null)
         {
-            Debug.Log("edited setting material");
-            materialSkeleton.baseMap = texture1;
+            materialSkeleton.baseMap = albedoImage.texture;
+            materialSkeleton.maskTexture = maskImage.texture;
             EventSystem<MaterialSkeleton, Transform>.RaiseEvent(EventType.UPDATED_MATERIAL, materialSkeleton, materialTransformKey);
             EventSystem.RaiseEvent(EventType.UPDATE_RENDERER);
         }
+    }
+
+    public void ChangeMenuSettings(Image button)
+    {
+        if(lastButtonPressed)
+            lastButtonPressed.color = buttonNotPressed;
         
+        button.color = buttonPressed;
+        lastButtonPressed = button;
+        
+        matSettings.SetActive(!matSettings.activeSelf);
+        maskSettings.SetActive(!maskSettings.activeSelf);
     }
 }
